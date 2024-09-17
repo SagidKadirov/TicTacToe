@@ -5,7 +5,7 @@ import java.util.List;
 import java.util.Scanner;
 
 public class PlayerManager {
-    private List<Player> players;
+    private final List<Player> players;
 
     public List<Player> getPlayers() {
         return players;
@@ -14,7 +14,6 @@ public class PlayerManager {
     public PlayerManager() {
         players=new ArrayList<>();
         checkPlayers();
-        System.out.println(players.getFirst()+" "+players.getLast());
     }
 
     public void checkPlayers() {

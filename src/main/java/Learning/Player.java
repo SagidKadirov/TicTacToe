@@ -4,9 +4,9 @@ import java.util.Scanner;
 
 public class Player {
     private static int aiCount = 1;
-    private boolean isHuman;
-    private char symbol;
-    private String name;
+    private final boolean isHuman;
+    private final char symbol;
+    private final String name;
     private boolean isWinner = false;
 
     public void setWinner(boolean winner) {
