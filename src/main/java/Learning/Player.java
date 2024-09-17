@@ -7,6 +7,15 @@ public class Player {
     private boolean isHuman;
     private char symbol;
     private String name;
+    private boolean isWinner = false;
+
+    public void setWinner(boolean winner) {
+        isWinner = winner;
+    }
+
+    public boolean isWinner() {
+        return isWinner;
+    }
 
     public char getSymbol() {
         return symbol;
@@ -36,7 +45,7 @@ public class Player {
     }
 
     static char setHumanSymbol() {
-        Scanner scanner=new Scanner(System.in);
+        Scanner scanner = new Scanner(System.in);
         String choice;
         do {
             System.out.println("1. X (first turn)\n2. 0 (Second turn)\nSet your turn: ");
@@ -47,7 +56,7 @@ public class Player {
 
 
     static char setAutoSymbol(Player player) {
-        if(player==null){
+        if (player == null) {
             return 'X';
         }
         if (player.getSymbol() == 'X') {
@@ -63,4 +72,6 @@ public class Player {
                 ", name='" + name + '\'' +
                 '}';
     }
+
+
 }

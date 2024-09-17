@@ -17,12 +17,5 @@ public class Map {
     }
 
 
-    public boolean checkForWin(Player player) {
-        boolean HorizontalFlag = false;
-        boolean VerticalFlag = false;
 
-        System.out.println("Horizontal flag: " + HorizontalFlag);
-        System.out.println("Vertical flag: " + VerticalFlag);
-        return false;
-    }
 }
