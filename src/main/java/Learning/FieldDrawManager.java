@@ -6,9 +6,6 @@ import java.awt.*;
 public class FieldDrawManager extends JPanel implements Runnable {
     Game game=new Game();
     Images images=new Images();
-    private final int FPS = 60;
-    private final int fieldWidth = 400;
-    private final int fieldHeight = 400;
 
     private int red = 0;
     private int green = 0;
@@ -16,7 +13,8 @@ public class FieldDrawManager extends JPanel implements Runnable {
     Thread gameThread;
 
     public FieldDrawManager() {
-
+        int fieldWidth = 400;
+        int fieldHeight = 400;
         this.setPreferredSize(new Dimension(fieldWidth, fieldHeight));
         this.setBackground(Color.BLACK);
         this.setDoubleBuffered(true);
@@ -27,7 +25,8 @@ public class FieldDrawManager extends JPanel implements Runnable {
 
     @Override
     public void run() {
-        double drawInterval = 1000000000 / FPS;  //0.016666 seconds
+        int FPS = 60;
+        double drawInterval = (double) 1000000000 / FPS;  //0.016666 seconds
         double nextDrawTime = System.nanoTime() + drawInterval;
         while (gameThread != null) {
             //!  1 UPDATE: update information about game

@@ -1,13 +1,11 @@
 package Learning;
 
-import java.util.Arrays;
-
 public class Map {
     private final char[][] map = new char[3][3];
-    private int[][] startX=new int[3][3];
-    private int[][] startY=new int[3][3];
-    private int[][] endX=new int[3][3];
-    private int[][] endY=new int[3][3];
+    private final int[][] startX=new int[3][3];
+    private final int[][] startY=new int[3][3];
+    private final int[][] endX=new int[3][3];
+    private final int[][] endY=new int[3][3];
 
     public Map() {
         int startColumnPosition=70;
