@@ -3,15 +3,20 @@ package Learning;
 import java.util.Collections;
 import java.util.Scanner;
 
-public class Game {
+public class Game extends Thread{
 
-    private final Map map;
-    private final PlayerManager playerManager;
+    private Map map;
+    private PlayerManager playerManager;
+
+    public Map getMap() {
+        return map;
+    }
+
+    public PlayerManager getPlayerManager() {
+        return playerManager;
+    }
 
     public Game() {
-        map = new Map();
-        playerManager = new PlayerManager();
-        makeMove();
     }
 
     public void checkForWin(Player player) {
@@ -62,8 +67,14 @@ public class Game {
             turn++;
         }
         if (playerManager.getPlayers().stream().noneMatch(Player::isWinner)) {
-            map.drawMap();
             System.out.println("It's a draw");
         }
     }
-  }
+
+    @Override
+    public void run() {
+        map = new Map();
+        playerManager = new PlayerManager();
+        makeMove();
+    }
+}
