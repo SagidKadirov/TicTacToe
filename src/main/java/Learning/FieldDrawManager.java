@@ -4,6 +4,7 @@ import javax.swing.*;
 import java.awt.*;
 
 public class FieldDrawManager extends JPanel implements Runnable {
+    MouseHandler mouseHandler=new MouseHandler(this);
     Game game = new Game();
     Images images = new Images();
 
@@ -17,6 +18,8 @@ public class FieldDrawManager extends JPanel implements Runnable {
         int fieldHeight = 400;
         this.setPreferredSize(new Dimension(fieldWidth, fieldHeight));
         this.setBackground(Color.BLACK);
+        this.setFocusable(true);
+        this.addMouseListener(mouseHandler);
         this.setDoubleBuffered(true);
         gameThread = new Thread(this);
         gameThread.start();
@@ -48,20 +51,22 @@ public class FieldDrawManager extends JPanel implements Runnable {
         }
     }
 
-    int count = 0;
+//    int count = 0;
 
     public void update() {
-        count++;
-        if (count > 1000) {
-            count = 0;
-        }
-
+//        count++;
+//        if (count > 100) {
+//            count = 0;
+//        }
+red+=1;
+green+=2;
+blue+=3;
     }
 
     public void paintComponent(Graphics g) {
-        if (count == 0) {
-            this.setBackground(new Color((red += 2) % 249, (green += 3) % 249, (blue += 4) % 249));
-        }
+//        if (count == 0) {
+            this.setBackground(new Color(red % 200, green % 249, blue % 200));
+//        }
 
         super.paintComponent(g);
         Graphics2D g2 = (Graphics2D) g;

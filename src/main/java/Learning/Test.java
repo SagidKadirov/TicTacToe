@@ -4,15 +4,20 @@ import javax.swing.*;
 
 public class Test {
     public static void main(String[] args) {
-        JFrame frame = new JFrame();
-        frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-        frame.setTitle("TicTacToe");
+        SwingUtilities.invokeLater(new Runnable() {
+            @Override
+            public void run() {
+                JFrame frame = new JFrame();
+                frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+                frame.setTitle("TicTacToe");
 
-        FieldDrawManager fieldManager=new FieldDrawManager();
+                FieldDrawManager fieldManager = new FieldDrawManager();
 
-        frame.setResizable(false);
-        frame.add(fieldManager);
-        frame.pack();
-        frame.setVisible(true);
+                frame.setResizable(false);
+                frame.add(fieldManager);
+                frame.pack();
+                frame.setVisible(true);
+            }
+        });
     }
 }

@@ -7,7 +7,7 @@ public class Player {
     private final boolean isHuman;
     private final char symbol;
     private final String name;
-    private boolean isWinner = false;
+    private boolean isWinner;
 
     public void setWinner(boolean winner) {
         isWinner = winner;
