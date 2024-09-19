@@ -4,8 +4,8 @@ import javax.swing.*;
 import java.awt.*;
 
 public class FieldDrawManager extends JPanel implements Runnable {
-    Game game=new Game();
-    Images images=new Images();
+    Game game = new Game();
+    Images images = new Images();
 
     private int red = 0;
     private int green = 0;
@@ -52,7 +52,7 @@ public class FieldDrawManager extends JPanel implements Runnable {
 
     public void update() {
         count++;
-        if (count > 100) {
+        if (count > 1000) {
             count = 0;
         }
 
@@ -77,10 +77,19 @@ public class FieldDrawManager extends JPanel implements Runnable {
         for (int row = 0; row < 3; row++) {
             for (int column = 0; column < 3; column++) {
                 g2.fillRect(game.getMap().getStartX()[row][column], game.getMap().getStartY()[row][column], 100, 100);
-                if (game.getMap().getMap()[row][column] == 'X') {
-                    g2.drawImage(images.getxSymbolPrinted(),game.getMap().getStartX()[row][column], game.getMap().getStartY()[row][column], 100, 100, null);
-                }else
-                if (game.getMap().getMap()[row][column] == '0') {
+
+//                if (game.getMap().getVisited()[row][column]) {
+//                    if (game.turn % 2 == 0 && game.getPlayerManager().getPlayers().get(game.turn % 2).getSymbol() == 'X') {
+//                        g2.drawImage(images.getxSymbolShowed(), game.getMap().getStartX()[row][column], game.getMap().getStartY()[row][column], 100, 100, null);
+//                    }
+//                    if(game.turn%2==1&&game.getPlayerManager().getPlayers().get(game.turn%2).getSymbol()=='0'){
+//                        g2.drawImage(images.getoSymbolShowed(), game.getMap().getStartX()[row][column], game.getMap().getStartY()[row][column], 100, 100, null);
+//                    }
+//                }
+
+                if (game.getMap().getSymbols()[row][column] == 'X') {
+                    g2.drawImage(images.getxSymbolPrinted(), game.getMap().getStartX()[row][column], game.getMap().getStartY()[row][column], 100, 100, null);
+                } else if (game.getMap().getSymbols()[row][column] == '0') {
                     g2.drawImage(images.getoSymbolPrinted(), game.getMap().getStartX()[row][column], game.getMap().getStartY()[row][column], 100, 100, null);
                 }
             }
