@@ -14,8 +14,8 @@ public class Images {
             num3 = ImageIO.read(getClass().getResourceAsStream("/numbers/3.png"));
             xSymbolPrinted = ImageIO.read(getClass().getResourceAsStream("/symbols/Printed_X_Symbol.png"));
             oSymbolPrinted = ImageIO.read(getClass().getResourceAsStream("/symbols/Printed_0_Symbol.png"));
-            xSymbolShowed = ImageIO.read(getClass().getResourceAsStream("/symbols/Showed_0_Symbol.png"));
-            oSymbolShowed = ImageIO.read(getClass().getResourceAsStream("/symbols/Showed_X_Symbol.png"));
+            xSymbolShowed = ImageIO.read(getClass().getResourceAsStream("/symbols/Showed_X_Symbol.png"));
+            oSymbolShowed = ImageIO.read(getClass().getResourceAsStream("/symbols/Showed_0_Symbol.png"));
         } catch (IOException e) {
             throw new RuntimeException(e);
         }

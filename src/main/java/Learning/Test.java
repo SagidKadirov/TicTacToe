@@ -10,6 +10,7 @@ public class Test {
                 JFrame frame = new JFrame();
                 frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
                 frame.setTitle("TicTacToe");
+                frame.setLocation(300,300);
 
                 FieldDrawManager fieldManager = new FieldDrawManager();
 

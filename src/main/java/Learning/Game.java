@@ -7,6 +7,7 @@ public class Game extends Thread {
     int turn = 0;
     private Map map;
     private PlayerManager playerManager;
+    boolean isFirstTurn=true;
 
     public Map getMap() {
         return map;
@@ -35,12 +36,11 @@ public class Game extends Thread {
     }
 
     public void makeMove() {
-
         int col, row;
         if (playerManager.getPlayers().getFirst().getSymbol() != 'X') {
             Collections.swap(playerManager.getPlayers(), 0, 1);
         }
-        map.drawMap();
+        map.drawConsoleMap();
         while (!isDrawGame()) {
             System.out.println("Turn №" + (turn + 1) + " of player: " + playerManager.getPlayers().get((turn) % 2).getName());
             do {
@@ -56,7 +56,7 @@ public class Game extends Thread {
             } while (row - 1 >= 3 || col - 1 >= 3 || row - 1 < 0 || col - 1 < 0 || map.getSymbols()[col - 1][row - 1] != '.');
             map.getSymbols()[col - 1][row - 1] = playerManager.getPlayers().get((turn) % 2).getSymbol();
             checkForWin(playerManager.getPlayers().get((turn) % 2));
-            map.drawMap();
+            map.drawConsoleMap();
             if (playerManager.getPlayers().get((turn) % 2).isWinner()) {
                 System.out.println(playerManager.getPlayers().get((turn) % 2).getName() + " (" + playerManager.getPlayers().get((turn) % 2).getSymbol() + ") is winner!");
                 break;
@@ -72,6 +72,6 @@ public class Game extends Thread {
     public void run() {
         map = new Map();
         playerManager = new PlayerManager();
-        makeMove();
+        //makeMove();
     }
 }

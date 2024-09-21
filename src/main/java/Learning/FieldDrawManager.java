@@ -4,22 +4,25 @@ import javax.swing.*;
 import java.awt.*;
 
 public class FieldDrawManager extends JPanel implements Runnable {
-    MouseHandler mouseHandler=new MouseHandler(this);
     Game game = new Game();
     Images images = new Images();
-
-    private int red = 0;
-    private int green = 0;
-    private int blue = 0;
     Thread gameThread;
+    MouseHandler mouseHandler = new MouseHandler(this);
+    MouseMotionHandler mouseMotionHandler = new MouseMotionHandler(this);
+    boolean isFirst = true;
+    //Background settings
+    int colorChangeFactor = 0;
+    private int red = (int) (Math.random() * 250);
+    private int green = (int) (Math.random() * 250);
+    private int blue = (int) (Math.random() * 250);
+
 
     public FieldDrawManager() {
-        int fieldWidth = 400;
-        int fieldHeight = 400;
-        this.setPreferredSize(new Dimension(fieldWidth, fieldHeight));
+        this.setPreferredSize(new Dimension(400, 500));
         this.setBackground(Color.BLACK);
         this.setFocusable(true);
         this.addMouseListener(mouseHandler);
+        this.addMouseMotionListener(mouseMotionHandler);
         this.setDoubleBuffered(true);
         gameThread = new Thread(this);
         gameThread.start();
@@ -28,6 +31,46 @@ public class FieldDrawManager extends JPanel implements Runnable {
 
     @Override
     public void run() {
+        makeFPS();
+    }
+
+    public void update() {
+        changeRGBValues();
+        isFirst=game.isFirstTurn;
+    }
+
+    public void paintComponent(Graphics g) {
+        this.setBackground(new Color(red, green, blue));
+        super.paintComponent(g);
+        Graphics2D g2 = (Graphics2D) g;
+        g2.setColor(Color.white);
+        drawNumbers(g2);
+        reDrawMap(g2, game.getMap());
+
+        g2.dispose();
+    }
+
+    public void drawNumbers(Graphics2D g2) {
+        //!Draw the numbers
+        g2.drawImage(images.getNum1(), 77, 0, 70, 70, null);
+        g2.drawImage(images.getNum2(), 190, 0, 70, 70, null);
+        g2.drawImage(images.getNum3(), 293, 0, 70, 70, null);
+        g2.drawImage(images.getNum1(), 0, 85, 70, 70, null);
+        g2.drawImage(images.getNum2(), 0, 190, 70, 70, null);
+        g2.drawImage(images.getNum3(), 0, 292, 70, 70, null);
+    }
+
+    public void reDrawMap(Graphics2D g2, Map map) {
+        for (int row = 0; row < 3; row++) {
+            for (int column = 0; column < 3; column++) {
+                game.getMap().drawEmptyMapSection(g2, row, column);
+                game.getMap().drawHints(g2, row, column, game.isFirstTurn, images);
+                game.getMap().drawPrintedXor0(g2, row, column, images);
+            }
+        }
+    }
+
+    public void makeFPS() {
         int FPS = 60;
         double drawInterval = (double) 1000000000 / FPS;  //0.016666 seconds
         double nextDrawTime = System.nanoTime() + drawInterval;
@@ -51,54 +94,9 @@ public class FieldDrawManager extends JPanel implements Runnable {
         }
     }
 
-//    int count = 0;
-
-    public void update() {
-//        count++;
-//        if (count > 100) {
-//            count = 0;
-//        }
-red+=1;
-green+=2;
-blue+=3;
-    }
-
-    public void paintComponent(Graphics g) {
-//        if (count == 0) {
-            this.setBackground(new Color(red % 200, green % 249, blue % 200));
-//        }
-
-        super.paintComponent(g);
-        Graphics2D g2 = (Graphics2D) g;
-        //!Draw the numbers
-        g2.drawImage(images.getNum1(), 77, 0, 70, 70, null);
-        g2.drawImage(images.getNum2(), 190, 0, 70, 70, null);
-        g2.drawImage(images.getNum3(), 293, 0, 70, 70, null);
-        g2.drawImage(images.getNum1(), 0, 85, 70, 70, null);
-        g2.drawImage(images.getNum2(), 0, 190, 70, 70, null);
-        g2.drawImage(images.getNum3(), 0, 292, 70, 70, null);
-        g2.setColor(Color.white);
-
-        for (int row = 0; row < 3; row++) {
-            for (int column = 0; column < 3; column++) {
-                g2.fillRect(game.getMap().getStartX()[row][column], game.getMap().getStartY()[row][column], 100, 100);
-
-//                if (game.getMap().getVisited()[row][column]) {
-//                    if (game.turn % 2 == 0 && game.getPlayerManager().getPlayers().get(game.turn % 2).getSymbol() == 'X') {
-//                        g2.drawImage(images.getxSymbolShowed(), game.getMap().getStartX()[row][column], game.getMap().getStartY()[row][column], 100, 100, null);
-//                    }
-//                    if(game.turn%2==1&&game.getPlayerManager().getPlayers().get(game.turn%2).getSymbol()=='0'){
-//                        g2.drawImage(images.getoSymbolShowed(), game.getMap().getStartX()[row][column], game.getMap().getStartY()[row][column], 100, 100, null);
-//                    }
-//                }
-
-                if (game.getMap().getSymbols()[row][column] == 'X') {
-                    g2.drawImage(images.getxSymbolPrinted(), game.getMap().getStartX()[row][column], game.getMap().getStartY()[row][column], 100, 100, null);
-                } else if (game.getMap().getSymbols()[row][column] == '0') {
-                    g2.drawImage(images.getoSymbolPrinted(), game.getMap().getStartX()[row][column], game.getMap().getStartY()[row][column], 100, 100, null);
-                }
-            }
-        }
-        g2.dispose();
+    public void changeRGBValues() {
+        red = (int) (Math.abs(Math.sin((double) colorChangeFactor++ / 250) * 200));
+        green = (int) (Math.abs(Math.sin((double) colorChangeFactor++ / 200) * 200));
+        blue = (int) (Math.abs(Math.sin((double) colorChangeFactor++ / 150) * 200));
     }
 }

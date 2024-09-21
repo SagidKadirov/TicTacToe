@@ -1,5 +1,7 @@
 package Learning;
 
+import java.awt.*;
+
 public class Map {
     private final char[][] symbols = new char[3][3];
     private final int[][] startX = new int[3][3];
@@ -53,7 +55,7 @@ public class Map {
         return startY;
     }
 
-    public void drawMap() {
+    public void drawConsoleMap() {
         System.out.println(
                 "   |  1  |  2  |  3  |\n" +
                         "----------------------\n" +
@@ -63,6 +65,28 @@ public class Map {
                         "----------------------\n" +
                         " 3 |  " + symbols[2][0] + "  |  " + symbols[2][1] + "  |  " + symbols[2][2] + "  |\n" +
                         "-----------------------");
+    }
+    public void drawEmptyMapSection(Graphics2D g2, int row, int column){
+        g2.fillRect(startX[row][column], startY[row][column], 100, 100);
+    }
+    public void drawHints(Graphics2D g2, int row, int column, boolean isFirstTurn, Images images){
+        if (visited[row][column]) {
+            if (isFirstTurn) {
+                g2.drawImage(images.getxSymbolShowed(), startX[row][column], startY[row][column], 100, 100, null);
+            }
+            else {
+                g2.drawImage(images.getoSymbolShowed(), startX[row][column], startY[row][column], 100, 100, null);
+            }
+        }
+    }
+
+    public void drawPrintedXor0(Graphics2D g2, int row, int column, Images images){
+        if(symbols[row][column]=='X'){
+            g2.drawImage(images.getxSymbolPrinted(), startX[row][column], startY[row][column], 100, 100, null);
+        }
+        if(symbols[row][column]=='O'){
+            g2.drawImage(images.getoSymbolPrinted(),startX[row][column],startY[row][column],100,100,null);
+        }
     }
 
 
