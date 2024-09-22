@@ -66,28 +66,35 @@ public class Map {
                         " 3 |  " + symbols[2][0] + "  |  " + symbols[2][1] + "  |  " + symbols[2][2] + "  |\n" +
                         "-----------------------");
     }
-    public void drawEmptyMapSection(Graphics2D g2, int row, int column){
+
+    public void drawEmptyMapSection(Graphics2D g2, int row, int column) {
         g2.fillRect(startX[row][column], startY[row][column], 100, 100);
     }
-    public void drawHints(Graphics2D g2, int row, int column, boolean isFirstTurn, Images images){
+
+    public void drawHints(Graphics2D g2, int row, int column, boolean isFirstTurn, Images images) {
         if (visited[row][column]) {
             if (isFirstTurn) {
                 g2.drawImage(images.getxSymbolShowed(), startX[row][column], startY[row][column], 100, 100, null);
-            }
-            else {
+            } else {
                 g2.drawImage(images.getoSymbolShowed(), startX[row][column], startY[row][column], 100, 100, null);
             }
         }
     }
 
-    public void drawPrintedXor0(Graphics2D g2, int row, int column, Images images){
-        if(symbols[row][column]=='X'){
+    public void drawPrintedXor0(Graphics2D g2, int row, int column, Images images) {
+        if (symbols[row][column] == 'X') {
             g2.drawImage(images.getxSymbolPrinted(), startX[row][column], startY[row][column], 100, 100, null);
         }
-        if(symbols[row][column]=='O'){
-            g2.drawImage(images.getoSymbolPrinted(),startX[row][column],startY[row][column],100,100,null);
+        if (symbols[row][column] == 'O') {
+            g2.drawImage(images.getoSymbolPrinted(), startX[row][column], startY[row][column], 100, 100, null);
         }
     }
 
-
+    public void drawNewMap() {
+        for (int row = 0; row < 3; row++) {
+            for (int column = 0; column < 3; column++) {
+                symbols[row][column] = '.';
+            }
+        }
+    }
 }

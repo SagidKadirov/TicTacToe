@@ -11,7 +11,7 @@ public class MouseMotionHandler extends java.awt.event.MouseMotionAdapter {
     }
 
     public void mouseMoved(MouseEvent e) {
-        if (fieldDrawManager.game.getPlayerManager().isGameModeSelected()) {
+        if (!fieldDrawManager.game.endGame&&fieldDrawManager.game.getPlayerManager().isGameModeSelected()) {
             super.mouseMoved(e);
             int X = e.getX();
             int Y = e.getY();

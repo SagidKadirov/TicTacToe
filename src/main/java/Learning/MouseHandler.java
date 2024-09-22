@@ -14,7 +14,7 @@ public class MouseHandler extends MouseAdapter {
 
     @Override
     public void mousePressed(MouseEvent e) {
-        if (fieldDrawManager.game.getPlayerManager().isGameModeSelected()) {
+        if (!fieldDrawManager.game.endGame&&fieldDrawManager.game.getPlayerManager().isGameModeSelected()) {
             super.mousePressed(e);
             int X = e.getX();
             int Y = e.getY();
@@ -42,5 +42,12 @@ public class MouseHandler extends MouseAdapter {
             fieldDrawManager.game.getPlayerManager().setVisible(true);
             fieldDrawManager.game.getPlayerManager().setState(JFrame.NORMAL);
         }
+    }
+
+    @Override
+    public void mouseReleased(MouseEvent e) {
+        super.mouseReleased(e);
+        MouseMotionHandler mmh=new MouseMotionHandler(fieldDrawManager);
+        mmh.mouseMoved(e);
     }
 }

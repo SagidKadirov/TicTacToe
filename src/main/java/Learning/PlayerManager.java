@@ -7,9 +7,7 @@ import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.util.ArrayList;
-import java.util.Collections;
 import java.util.List;
-import java.util.Scanner;
 
 public class PlayerManager extends JFrame {
     private final List<Player> players;
@@ -73,6 +71,10 @@ public class PlayerManager extends JFrame {
         return gameModeSelected;
     }
 
+    public void setGameModeSelected(boolean gameModeSelected) {
+        this.gameModeSelected = gameModeSelected;
+    }
+
     public boolean isFirstTurn() {
         return isFirstTurn;
     }
@@ -126,12 +128,12 @@ public class PlayerManager extends JFrame {
             @Override
             public void actionPerformed(ActionEvent e) {
                 if (flag == 1) {
-                    if (nameField.getText().isEmpty() && (!symbolX.isSelected() && !symbolO.isSelected())) {
-                        JOptionPane.showMessageDialog(humanSettingsFrame, "Oooops something wrong!\nWrite name and select symbol");
-                    } else {
+                    if (!nameField.getText().isEmpty() && (symbolX.isSelected() || symbolO.isSelected())) {
                         players.add(new Player(true, nameField.getText(), symbolO.isSelected() ? 'O' : 'X'));
                         JOptionPane.showMessageDialog(humanSettingsFrame, "Player " + players.getFirst().getName() + " settings saved!");
                         flag = 2;
+                    } else {
+                        JOptionPane.showMessageDialog(humanSettingsFrame, "Oooops something wrong!\nWrite name and select symbol");
                     }
                 }
                 if (flag == 2 && count == 1) {

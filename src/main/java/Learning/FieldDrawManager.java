@@ -6,10 +6,12 @@ import java.awt.*;
 public class FieldDrawManager extends JPanel implements Runnable {
     Game game = new Game();
     Images images = new Images();
-    Thread gameThread;
+    Thread drawThread = new Thread(this);
+
+
     MouseHandler mouseHandler = new MouseHandler(this);
     MouseMotionHandler mouseMotionHandler = new MouseMotionHandler(this);
-    boolean isFirst = true;
+
     //Background settings
     int colorChangeFactor = 0;
     private int red = (int) (Math.random() * 250);
@@ -24,8 +26,7 @@ public class FieldDrawManager extends JPanel implements Runnable {
         this.addMouseListener(mouseHandler);
         this.addMouseMotionListener(mouseMotionHandler);
         this.setDoubleBuffered(true);
-        gameThread = new Thread(this);
-        gameThread.start();
+        drawThread.start();
         game.start();
     }
 
@@ -36,7 +37,42 @@ public class FieldDrawManager extends JPanel implements Runnable {
 
     public void update() {
         changeRGBValues();
-        isFirst=game.isFirstTurn;
+        if (game.getPlayerManager() != null && !game.getPlayerManager().getPlayers().isEmpty()) {
+            game.checkForWin();
+            if (!game.endGame && game.getPlayerManager().getPlayers().getFirst().isWinner()) {
+                JOptionPane.showMessageDialog(null, game.getPlayerManager().getPlayers().getFirst() + "is Winner");
+                game.endGame = true;
+                if (game.showTheRepeatGameDialog()) {
+                    game.playNewGame();
+                    return;
+                }
+                else {
+                    System.exit(0);
+                }
+            }
+            if (!game.endGame && game.getPlayerManager().getPlayers().getLast().isWinner()) {
+                JOptionPane.showMessageDialog(null, game.getPlayerManager().getPlayers().getLast() + "is Winner");
+                game.endGame = true;
+                if (game.showTheRepeatGameDialog()) {
+                    game.playNewGame();
+                    repaint();
+                    return;
+                }
+                else {
+                    System.exit(0);
+                }
+            }
+            if (!game.endGame && game.isDrawGame()) {
+                JOptionPane.showMessageDialog(null, "It's Draw");
+                game.endGame = true;
+                if (game.showTheRepeatGameDialog()) {
+                    game.playNewGame();
+                }
+                else {
+                    System.exit(0);
+                }
+            }
+        }
     }
 
     public void paintComponent(Graphics g) {
@@ -63,9 +99,13 @@ public class FieldDrawManager extends JPanel implements Runnable {
     public void reDrawMap(Graphics2D g2, Map map) {
         for (int row = 0; row < 3; row++) {
             for (int column = 0; column < 3; column++) {
-                game.getMap().drawEmptyMapSection(g2, row, column);
-                game.getMap().drawHints(g2, row, column, game.isFirstTurn, images);
-                game.getMap().drawPrintedXor0(g2, row, column, images);
+                try {
+                    game.getMap().drawEmptyMapSection(g2, row, column);
+                    game.getMap().drawHints(g2, row, column, game.getPlayerManager().isFirstTurn(), images);
+                    game.getMap().drawPrintedXor0(g2, row, column, images);
+                } catch (Exception e) {
+                    break;
+                }
             }
         }
     }
@@ -74,7 +114,7 @@ public class FieldDrawManager extends JPanel implements Runnable {
         int FPS = 60;
         double drawInterval = (double) 1000000000 / FPS;  //0.016666 seconds
         double nextDrawTime = System.nanoTime() + drawInterval;
-        while (gameThread != null) {
+        while (drawThread != null) {
             //!  1 UPDATE: update information about game
             update();
             //!  2 DRAW: draw the screen with the updated information
@@ -99,4 +139,6 @@ public class FieldDrawManager extends JPanel implements Runnable {
         green = (int) (Math.abs(Math.sin((double) colorChangeFactor++ / 200) * 200));
         blue = (int) (Math.abs(Math.sin((double) colorChangeFactor++ / 150) * 200));
     }
+
+
 }
