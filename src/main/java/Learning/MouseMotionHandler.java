@@ -11,20 +11,20 @@ public class MouseMotionHandler extends java.awt.event.MouseMotionAdapter {
     }
 
     public void mouseMoved(MouseEvent e) {
-        if (!fieldDrawManager.game.endGame&&fieldDrawManager.game.getPlayerManager().isGameModeSelected()) {
+        if (!fieldDrawManager.getGameInteract().isDrawGame()&&fieldDrawManager.getPlayerManager().isGameModeSelected()) {
             super.mouseMoved(e);
             int X = e.getX();
             int Y = e.getY();
             for (int row = 0; row < 3; row++) {
                 for (int column = 0; column < 3; column++) {
-                    if (fieldDrawManager.game.getMap().getSymbols()[row][column] == '.' &&
-                            X > fieldDrawManager.game.getMap().getStartX()[row][column] &&
-                            X < fieldDrawManager.game.getMap().getEndX()[row][column] &&
-                            Y > fieldDrawManager.game.getMap().getStartY()[row][column] &&
-                            Y < fieldDrawManager.game.getMap().getEndY()[row][column]) {
-                        fieldDrawManager.game.getMap().getVisited()[row][column] = true;
+                    if (fieldDrawManager.getMap().getSymbols()[row][column] == '.' &&
+                            X > fieldDrawManager.getMap().getStartX()[row][column] &&
+                            X < fieldDrawManager.getMap().getEndX()[row][column] &&
+                            Y > fieldDrawManager.getMap().getStartY()[row][column] &&
+                            Y < fieldDrawManager.getMap().getEndY()[row][column]) {
+                        fieldDrawManager.getMap().getVisited()[row][column] = true;
                     } else {
-                        fieldDrawManager.game.getMap().getVisited()[row][column] = false;
+                        fieldDrawManager.getMap().getVisited()[row][column] = false;
                     }
                 }
             }

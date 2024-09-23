@@ -4,10 +4,23 @@ import javax.swing.*;
 import java.awt.*;
 
 public class FieldDrawManager extends JPanel implements Runnable {
-    Game game = new Game();
-    Images images = new Images();
-    Thread drawThread = new Thread(this);
+    private Map map=new Map();
+    private PlayerManager playerManager=new PlayerManager();
+    private final GameInteract gameInteract=new GameInteract(map,playerManager);
+    private final Images images = new Images();
+    private final Thread drawThread = new Thread(this);
 
+    public Map getMap() {
+        return map;
+    }
+
+    public PlayerManager getPlayerManager() {
+        return playerManager;
+    }
+
+    public GameInteract getGameInteract() {
+        return gameInteract;
+    }
 
     MouseHandler mouseHandler = new MouseHandler(this);
     MouseMotionHandler mouseMotionHandler = new MouseMotionHandler(this);
@@ -27,52 +40,16 @@ public class FieldDrawManager extends JPanel implements Runnable {
         this.addMouseMotionListener(mouseMotionHandler);
         this.setDoubleBuffered(true);
         drawThread.start();
-        game.start();
+        gameInteract.start();
     }
 
     @Override
     public void run() {
-        makeFPS();
+        playGameWithFPS(60);
     }
 
     public void update() {
         changeRGBValues();
-        if (game.getPlayerManager() != null && !game.getPlayerManager().getPlayers().isEmpty()) {
-            game.checkForWin();
-            if (!game.endGame && game.getPlayerManager().getPlayers().getFirst().isWinner()) {
-                JOptionPane.showMessageDialog(null, game.getPlayerManager().getPlayers().getFirst() + "is Winner");
-                game.endGame = true;
-                if (game.showTheRepeatGameDialog()) {
-                    game.playNewGame();
-                    return;
-                }
-                else {
-                    System.exit(0);
-                }
-            }
-            if (!game.endGame && game.getPlayerManager().getPlayers().getLast().isWinner()) {
-                JOptionPane.showMessageDialog(null, game.getPlayerManager().getPlayers().getLast() + "is Winner");
-                game.endGame = true;
-                if (game.showTheRepeatGameDialog()) {
-                    game.playNewGame();
-                    repaint();
-                    return;
-                }
-                else {
-                    System.exit(0);
-                }
-            }
-            if (!game.endGame && game.isDrawGame()) {
-                JOptionPane.showMessageDialog(null, "It's Draw");
-                game.endGame = true;
-                if (game.showTheRepeatGameDialog()) {
-                    game.playNewGame();
-                }
-                else {
-                    System.exit(0);
-                }
-            }
-        }
     }
 
     public void paintComponent(Graphics g) {
@@ -81,28 +58,29 @@ public class FieldDrawManager extends JPanel implements Runnable {
         Graphics2D g2 = (Graphics2D) g;
         g2.setColor(Color.white);
         drawNumbers(g2);
-        reDrawMap(g2, game.getMap());
-
+        reDrawMap(g2, map);
         g2.dispose();
     }
 
     public void drawNumbers(Graphics2D g2) {
         //!Draw the numbers
-        g2.drawImage(images.getNum1(), 77, 0, 70, 70, null);
-        g2.drawImage(images.getNum2(), 190, 0, 70, 70, null);
-        g2.drawImage(images.getNum3(), 293, 0, 70, 70, null);
-        g2.drawImage(images.getNum1(), 0, 85, 70, 70, null);
-        g2.drawImage(images.getNum2(), 0, 190, 70, 70, null);
-        g2.drawImage(images.getNum3(), 0, 292, 70, 70, null);
+        g2.setFont(new Font("Vineta BT",Font.BOLD,68));
+        g2.drawString("1",90,60);
+        g2.drawString("2",195,60);
+        g2.drawString("3",300,60);
+        g2.drawString("1",4,140);
+        g2.drawString("2",4,245);
+        g2.drawString("3",4,350);
     }
 
     public void reDrawMap(Graphics2D g2, Map map) {
         for (int row = 0; row < 3; row++) {
             for (int column = 0; column < 3; column++) {
                 try {
-                    game.getMap().drawEmptyMapSection(g2, row, column);
-                    game.getMap().drawHints(g2, row, column, game.getPlayerManager().isFirstTurn(), images);
-                    game.getMap().drawPrintedXor0(g2, row, column, images);
+                    map.drawEmptyMapSection(g2, row, column);
+                    map.drawHints(g2, row, column, GameInteract.isFirstTurnNow(), images);
+                    map.drawPrintedXor0(g2, row, column, images);
+                    writeTurn(false,g2);
                 } catch (Exception e) {
                     break;
                 }
@@ -110,8 +88,7 @@ public class FieldDrawManager extends JPanel implements Runnable {
         }
     }
 
-    public void makeFPS() {
-        int FPS = 60;
+    public void playGameWithFPS(int FPS) {
         double drawInterval = (double) 1000000000 / FPS;  //0.016666 seconds
         double nextDrawTime = System.nanoTime() + drawInterval;
         while (drawThread != null) {
@@ -135,10 +112,12 @@ public class FieldDrawManager extends JPanel implements Runnable {
     }
 
     public void changeRGBValues() {
-        red = (int) (Math.abs(Math.sin((double) colorChangeFactor++ / 250) * 200));
-        green = (int) (Math.abs(Math.sin((double) colorChangeFactor++ / 200) * 200));
-        blue = (int) (Math.abs(Math.sin((double) colorChangeFactor++ / 150) * 200));
+        red = (int) (Math.abs(Math.sin((double) colorChangeFactor++ / 250) * 150));
+        green = (int) (Math.abs(Math.sin((double) colorChangeFactor++ / 200) * 100));
+        blue = (int) (Math.abs(Math.sin((double) colorChangeFactor++ / 150) * 100));
     }
-
-
+    public void writeTurn(boolean isFirstTurn, Graphics2D g2) {
+        g2.setFont(new Font("TimesRoman",Font.BOLD,32));
+            g2.drawString("The "+(isFirstTurn?"first":"second")+" player's turn",isFirstTurn?50:10,430);
+    }
 }

@@ -10,39 +10,37 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class PlayerManager extends JFrame {
-    private final List<Player> players;
-    private JPanel choicePanel = new JPanel();
-    private JButton HumanVsAI = new JButton("Human Vs AI");
-    private JButton HumanVsHuman = new JButton("Human Vs Human");
-    private JButton AIvsAI = new JButton("AI vs AI");
+    private final List<Player> players = new ArrayList<>();
     private boolean gameModeSelected = false;
     private int flag = 1;
-    private boolean isFirstTurn = true;
+    private final boolean[]modes=new boolean[]{false,false,false};
+
 
     public PlayerManager() {
-        players = new ArrayList<>();
         this.setSize(200, 200);
         this.setLocation(400, 350);
         this.setDefaultCloseOperation(WindowConstants.DISPOSE_ON_CLOSE);
         this.setTitle("Game modes");
         this.setFocusable(true);
         this.setLayout(new GridLayout(1, 1));
+        JPanel choicePanel = new JPanel();
         this.add(choicePanel);
         choicePanel.setDoubleBuffered(true);
         choicePanel.setBorder(BorderFactory.createTitledBorder("Select the mode"));
-        choicePanel.add(HumanVsAI);
-        choicePanel.add(HumanVsHuman);
+        JButton humanVsAI = new JButton("Human Vs AI");
+        choicePanel.add(humanVsAI);
+        JButton humanVsHuman = new JButton("Human Vs Human");
+        choicePanel.add(humanVsHuman);
+        JButton AIvsAI = new JButton("AI vs AI");
         choicePanel.add(AIvsAI);
-        HumanVsAI.addActionListener(new ActionListener() {
-
+        humanVsAI.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
                 PlayerManager.super.setVisible(false);
                 creatingHuman(1);
             }
         });
-        HumanVsHuman.addActionListener(new ActionListener() {
-
+        humanVsHuman.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
                 PlayerManager.super.setVisible(false);
@@ -60,7 +58,7 @@ public class PlayerManager extends JFrame {
             }
         });
         this.setResizable(false);
-        this.setVisible(true);
+        this.setVisible(false);
     }
 
     public List<Player> getPlayers() {
@@ -73,14 +71,6 @@ public class PlayerManager extends JFrame {
 
     public void setGameModeSelected(boolean gameModeSelected) {
         this.gameModeSelected = gameModeSelected;
-    }
-
-    public boolean isFirstTurn() {
-        return isFirstTurn;
-    }
-
-    public void setFirstTurn(boolean firstTurn) {
-        isFirstTurn = firstTurn;
     }
 
     public void creatingHuman(int count) {
@@ -138,6 +128,9 @@ public class PlayerManager extends JFrame {
                 }
                 if (flag == 2 && count == 1) {
                     players.add(new Player(false, Player.setAIName(), Player.setAutoSymbol(players.getFirst())));
+                    if (players.getLast().getSymbol() == 'X') {
+                        GameInteract.setBotsTurn(true);
+                    }
                     humanSettingsFrame.setVisible(false);
                     flag = 1;
                     JOptionPane.showMessageDialog(humanSettingsFrame, "Game started!!!");
@@ -176,20 +169,21 @@ public class PlayerManager extends JFrame {
 
             }
         });
+        cancelButton.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                nameField.setText("");
+                symbolX.setEnabled(true);
+                symbolO.setEnabled(true);
+                symbolX.setSelected(false);
+                symbolO.setSelected(false);
+                humanSettingsFrame.dispose();
+                PlayerManager.super.setVisible(true);
+                PlayerManager.super.setState(JFrame.NORMAL);
+            }
+        });
 
     }
 
 
 }
-/*принимаем кол-во людей 1 или 2
-
-флаг=1
-
-если кол-во людей 1 или кол-во людей 2 и флаг 1
-принять данные с формы для игрока 1
-флаг++
-если кол-во людей 2 и флаг 2
-принять данные с формы для игрока 2
-флаг 1
-ретурн
- */
