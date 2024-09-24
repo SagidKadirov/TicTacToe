@@ -85,7 +85,7 @@ public class Map {
         if (symbols[row][column] == 'X') {
             g2.drawImage(images.getxSymbolPrinted(), startX[row][column], startY[row][column], 100, 100, null);
         }
-        if (symbols[row][column] == 'O') {
+        if (symbols[row][column] == '0') {
             g2.drawImage(images.getoSymbolPrinted(), startX[row][column], startY[row][column], 100, 100, null);
         }
     }

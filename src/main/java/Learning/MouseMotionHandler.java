@@ -1,6 +1,7 @@
 package Learning;
 
 import java.awt.event.MouseEvent;
+import java.util.Arrays;
 
 public class MouseMotionHandler extends java.awt.event.MouseMotionAdapter {
 
@@ -11,7 +12,7 @@ public class MouseMotionHandler extends java.awt.event.MouseMotionAdapter {
     }
 
     public void mouseMoved(MouseEvent e) {
-        if (!fieldDrawManager.getGameInteract().isDrawGame()&&fieldDrawManager.getPlayerManager().isGameModeSelected()) {
+        if (!fieldDrawManager.getGameInteract().isDrawGame()&&!GameInteract.isEndGame()) {
             super.mouseMoved(e);
             int X = e.getX();
             int Y = e.getY();

@@ -3,6 +3,7 @@ package Learning;
 import javax.swing.*;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
+import java.util.Arrays;
 
 public class MouseHandler extends MouseAdapter {
 
@@ -14,7 +15,7 @@ public class MouseHandler extends MouseAdapter {
 
     @Override
     public void mousePressed(MouseEvent e) {
-        if (!GameInteract.isEndGame()&&fieldDrawManager.getPlayerManager().isGameModeSelected()) {
+        if (!GameInteract.isEndGame()) {
             super.mousePressed(e);
             int X = e.getX();
             int Y = e.getY();
@@ -27,10 +28,12 @@ public class MouseHandler extends MouseAdapter {
                             Y < fieldDrawManager.getMap().getEndY()[row][column]) {
                         if (GameInteract.isFirstTurnNow()) {
                             fieldDrawManager.getMap().getSymbols()[row][column] = 'X';
-                            GameInteract.setIsFirstTurn(false);
+                            GameInteract.setFirstTurn(false);
+                            fieldDrawManager.getMap().drawConsoleMap();
                         } else {
-                            fieldDrawManager.getMap().getSymbols()[row][column] = 'O';
-                            GameInteract.setIsFirstTurn(true);
+                            fieldDrawManager.getMap().getSymbols()[row][column] = '0';
+                            GameInteract.setFirstTurn(true);
+                            fieldDrawManager.getMap().drawConsoleMap();
                         }
                     }
                 }

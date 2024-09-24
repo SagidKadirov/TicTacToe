@@ -4,8 +4,8 @@ import javax.swing.*;
 import java.awt.*;
 
 public class FieldDrawManager extends JPanel implements Runnable {
-    private Map map=new Map();
-    private PlayerManager playerManager=new PlayerManager();
+    private final Map map=new Map();
+    private final PlayerManager playerManager=new PlayerManager();
     private final GameInteract gameInteract=new GameInteract(map,playerManager);
     private final Images images = new Images();
     private final Thread drawThread = new Thread(this);
@@ -80,7 +80,7 @@ public class FieldDrawManager extends JPanel implements Runnable {
                     map.drawEmptyMapSection(g2, row, column);
                     map.drawHints(g2, row, column, GameInteract.isFirstTurnNow(), images);
                     map.drawPrintedXor0(g2, row, column, images);
-                    writeTurn(false,g2);
+                    writeTurn(GameInteract.isFirstTurnNow(),g2);
                 } catch (Exception e) {
                     break;
                 }
@@ -116,8 +116,9 @@ public class FieldDrawManager extends JPanel implements Runnable {
         green = (int) (Math.abs(Math.sin((double) colorChangeFactor++ / 200) * 100));
         blue = (int) (Math.abs(Math.sin((double) colorChangeFactor++ / 150) * 100));
     }
+
     public void writeTurn(boolean isFirstTurn, Graphics2D g2) {
         g2.setFont(new Font("TimesRoman",Font.BOLD,32));
-            g2.drawString("The "+(isFirstTurn?"first":"second")+" player's turn",isFirstTurn?50:10,430);
+        g2.drawString("The "+(isFirstTurn?"first":"second")+" player's turn",isFirstTurn?50:10,430);
     }
 }

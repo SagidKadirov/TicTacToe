@@ -1,13 +1,19 @@
 package Learning;
 
 import javax.swing.*;
+import java.util.Arrays;
 
 public class GameInteract extends Thread {
-    private static boolean endGame = false;
+    private static boolean endGame = true;
     private static boolean isFirstTurn = true;
     private static boolean botsTurn=false;
+    private final Thread gameThread=new Thread(this);
     private Map map;
     private PlayerManager pManager ;
+
+    public static void setEndGame(boolean endGame) {
+        GameInteract.endGame = endGame;
+    }
 
     public static boolean isEndGame() {
         return endGame;
@@ -17,7 +23,7 @@ public class GameInteract extends Thread {
         GameInteract.botsTurn = botsTurn;
     }
 
-    public static void setIsFirstTurn(boolean isFirstTurn) {
+    public static void setFirstTurn(boolean isFirstTurn) {
         GameInteract.isFirstTurn = isFirstTurn;
     }
 
@@ -56,13 +62,17 @@ public class GameInteract extends Thread {
 
     @Override
     public void run() {
+        while(gameThread!=null){
+            botsTurn();
+        }
+
     }
 
     public void playNewGame() {
         if(JOptionPane.showConfirmDialog(null, "Do you want to play again?", "Play again?", JOptionPane.YES_NO_OPTION) == 0) {
             map.drawNewMap();
             endGame = false;
-            pManager.setGameModeSelected(false);
+            Arrays.fill(pManager.getModes(),false);
             isFirstTurn = true;
             pManager.getPlayers().clear();
             botsTurn = false;
@@ -70,6 +80,21 @@ public class GameInteract extends Thread {
         }
         else {
             System.exit(0);
+        }
+    }
+    public void botsTurn(){
+        int row,col;
+        if(botsTurn&&!endGame){
+            do{
+                row=(int)(Math.random()*4);
+                col=(int)(Math.random()*4);
+            }while(map.getSymbols()[row][col]!='.');
+            if(isFirstTurn&&!pManager.getPlayers().getFirst().isHuman()){
+                map.getSymbols()[row][col]='X';
+            }else if(!isFirstTurn&&!pManager.getPlayers().getLast().isHuman())
+            {
+                map.getSymbols()[row][col]='0';
+            }
         }
     }
 }
