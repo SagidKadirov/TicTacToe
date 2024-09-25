@@ -29,10 +29,11 @@ public class Player {
         return name;
     }
 
-    public Player(boolean isHuman, String name, char symbol) {
+    public Player(boolean isHuman, String name, char symbol,boolean inWinner) {
         this.isHuman = isHuman;
         this.name = name;
         this.symbol = symbol;
+        this.isWinner = inWinner;
     }
 
     static String setAIName() {

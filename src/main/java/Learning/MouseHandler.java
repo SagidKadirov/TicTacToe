@@ -3,7 +3,6 @@ package Learning;
 import javax.swing.*;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
-import java.util.Arrays;
 
 public class MouseHandler extends MouseAdapter {
 
@@ -15,7 +14,7 @@ public class MouseHandler extends MouseAdapter {
 
     @Override
     public void mousePressed(MouseEvent e) {
-        if (!GameInteract.isEndGame()) {
+        if (!GameInteract.isEndGame()&&!fieldDrawManager.getPlayerManager().getModes()[2]) {
             super.mousePressed(e);
             int X = e.getX();
             int Y = e.getY();
@@ -26,21 +25,23 @@ public class MouseHandler extends MouseAdapter {
                             X < fieldDrawManager.getMap().getEndX()[row][column] &&
                             Y > fieldDrawManager.getMap().getStartY()[row][column] &&
                             Y < fieldDrawManager.getMap().getEndY()[row][column]) {
-                        if (GameInteract.isFirstTurnNow()) {
-                            fieldDrawManager.getMap().getSymbols()[row][column] = 'X';
-                            GameInteract.setFirstTurn(false);
-                            fieldDrawManager.getMap().drawConsoleMap();
-                        } else {
-                            fieldDrawManager.getMap().getSymbols()[row][column] = '0';
-                            GameInteract.setFirstTurn(true);
+                            if (fieldDrawManager.getGameInteract().isFirstTurnNow()) {
+                                if(fieldDrawManager.getPlayerManager().getPlayers().getFirst().isHuman()) {
+                                    fieldDrawManager.getMap().getSymbols()[row][column] = 'X';
+                                    fieldDrawManager.getGameInteract().setFirstTurn(false);
+                                }
+                            } else {
+                                if(fieldDrawManager.getPlayerManager().getPlayers().getLast().isHuman()) {
+                                    fieldDrawManager.getMap().getSymbols()[row][column] = '0';
+                                    fieldDrawManager.getGameInteract().setFirstTurn(true);
+                                }
+                            }
                             fieldDrawManager.getMap().drawConsoleMap();
                         }
                     }
                 }
-            }
-        }
-        else {
-            JOptionPane.showMessageDialog(null,"Select the game Mode");
+        } else if(!fieldDrawManager.getPlayerManager().getModes()[2]){
+            JOptionPane.showMessageDialog(null, "Select the game Mode");
             fieldDrawManager.getPlayerManager().setVisible(true);
             fieldDrawManager.getPlayerManager().setState(JFrame.NORMAL);
         }
@@ -49,7 +50,7 @@ public class MouseHandler extends MouseAdapter {
     @Override
     public void mouseReleased(MouseEvent e) {
         super.mouseReleased(e);
-        MouseMotionHandler mmh=new MouseMotionHandler(fieldDrawManager);
+        MouseMotionHandler mmh = new MouseMotionHandler(fieldDrawManager);
         mmh.mouseMoved(e);
     }
 }

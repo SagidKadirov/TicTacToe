@@ -128,8 +128,8 @@ public class PlayerManager extends JFrame {
                 @Override
                 public void actionPerformed(ActionEvent e) {
                     if (!nameField.getText().isEmpty() && (symbolX.isSelected() || symbolO.isSelected())) {
-                        players.add(new Player(true, nameField.getText(), symbolX.isSelected() ? 'X' : '0'));
-                        players.add(new Player(false, Player.setAIName(), Player.setAutoSymbol(players.getFirst())));
+                        players.add(new Player(true, nameField.getText(), symbolX.isSelected() ? 'X' : '0',false));
+                        players.add(new Player(false, Player.setAIName(), Player.setAutoSymbol(players.getFirst()),false));
                         if (players.getFirst().getSymbol() == '0') {
                             Collections.swap(players, 0, 1);
                         }
@@ -193,8 +193,8 @@ public class PlayerManager extends JFrame {
                 @Override
                 public void actionPerformed(ActionEvent e) {
                     if (!firstNameField.getText().isEmpty() && !secondNameField.getText().isEmpty()) {
-                        players.add(new Player(true, firstNameField.getText(), 'X'));
-                        players.add(new Player(true, secondNameField.getText(), '0'));
+                        players.add(new Player(true, firstNameField.getText(), 'X',false));
+                        players.add(new Player(true, secondNameField.getText(), '0',false));
                         JOptionPane.showMessageDialog(humanSettings, "Player " + players.getFirst().getName() + " and " + players.getLast().getName() + " settings saved!");
                         JOptionPane.showMessageDialog(null, "Game started!!!");
                         humanSettings.dispose();
@@ -217,8 +217,8 @@ public class PlayerManager extends JFrame {
             });
         }
         if (mode[2]) {
-            players.add(new Player(false, Player.setAIName(), Player.setAutoSymbol(null)));
-            players.add(new Player(false, Player.setAIName(), Player.setAutoSymbol(players.getFirst())));
+            players.add(new Player(false, Player.setAIName(), Player.setAutoSymbol(null),false));
+            players.add(new Player(false, Player.setAIName(), Player.setAutoSymbol(players.getFirst()),false));
             JOptionPane.showMessageDialog(null, "Game started!!!");
             GameInteract.setEndGame(false);
         }

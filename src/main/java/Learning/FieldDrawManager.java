@@ -4,9 +4,9 @@ import javax.swing.*;
 import java.awt.*;
 
 public class FieldDrawManager extends JPanel implements Runnable {
-    private final Map map=new Map();
-    private final PlayerManager playerManager=new PlayerManager();
-    private final GameInteract gameInteract=new GameInteract(map,playerManager);
+    private final Map map = new Map();
+    private final PlayerManager playerManager = new PlayerManager();
+    private final GameInteract gameInteract = new GameInteract(map, playerManager);
     private final Images images = new Images();
     private final Thread drawThread = new Thread(this);
 
@@ -39,8 +39,8 @@ public class FieldDrawManager extends JPanel implements Runnable {
         this.addMouseListener(mouseHandler);
         this.addMouseMotionListener(mouseMotionHandler);
         this.setDoubleBuffered(true);
-        drawThread.start();
         gameInteract.start();
+        drawThread.start();
     }
 
     @Override
@@ -64,13 +64,13 @@ public class FieldDrawManager extends JPanel implements Runnable {
 
     public void drawNumbers(Graphics2D g2) {
         //!Draw the numbers
-        g2.setFont(new Font("Vineta BT",Font.BOLD,68));
-        g2.drawString("1",90,60);
-        g2.drawString("2",195,60);
-        g2.drawString("3",300,60);
-        g2.drawString("1",4,140);
-        g2.drawString("2",4,245);
-        g2.drawString("3",4,350);
+        g2.setFont(new Font("Vineta BT", Font.BOLD, 68));
+        g2.drawString("1", 90, 60);
+        g2.drawString("2", 195, 60);
+        g2.drawString("3", 300, 60);
+        g2.drawString("1", 4, 140);
+        g2.drawString("2", 4, 245);
+        g2.drawString("3", 4, 350);
     }
 
     public void reDrawMap(Graphics2D g2, Map map) {
@@ -78,9 +78,9 @@ public class FieldDrawManager extends JPanel implements Runnable {
             for (int column = 0; column < 3; column++) {
                 try {
                     map.drawEmptyMapSection(g2, row, column);
-                    map.drawHints(g2, row, column, GameInteract.isFirstTurnNow(), images);
+                    map.drawHints(g2, row, column, gameInteract.isFirstTurnNow(), images);
                     map.drawPrintedXor0(g2, row, column, images);
-                    writeTurn(GameInteract.isFirstTurnNow(),g2);
+                    writeTurn(gameInteract.isFirstTurnNow(), g2);
                 } catch (Exception e) {
                     break;
                 }
@@ -118,7 +118,9 @@ public class FieldDrawManager extends JPanel implements Runnable {
     }
 
     public void writeTurn(boolean isFirstTurn, Graphics2D g2) {
-        g2.setFont(new Font("TimesRoman",Font.BOLD,32));
-        g2.drawString("The "+(isFirstTurn?"first":"second")+" player's turn",isFirstTurn?50:10,430);
+        if (!GameInteract.isEndGame()) {
+            g2.setFont(new Font("TimesRoman", Font.BOLD, 32));
+            g2.drawString("The " + (isFirstTurn ? playerManager.getPlayers().getFirst().getName() : playerManager.getPlayers().getLast().getName()) + " player's turn", 10, 430);
+        }
     }
 }

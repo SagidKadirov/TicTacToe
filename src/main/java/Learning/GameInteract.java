@@ -2,36 +2,28 @@ package Learning;
 
 import javax.swing.*;
 import java.util.Arrays;
+import java.util.Scanner;
 
 public class GameInteract extends Thread {
     private static boolean endGame = true;
-    private static boolean isFirstTurn = true;
-    private static boolean botsTurn=false;
-    private final Thread gameThread=new Thread(this);
+    private boolean isFirstTurn = true;
+    private final Thread gameThread = new Thread(this);
     private Map map;
-    private PlayerManager pManager ;
+    private PlayerManager pManager;
 
     public static void setEndGame(boolean endGame) {
         GameInteract.endGame = endGame;
+    }
+
+    public void setFirstTurn(boolean isFirstTurn) {
+        this.isFirstTurn = isFirstTurn;
     }
 
     public static boolean isEndGame() {
         return endGame;
     }
 
-    public static void setBotsTurn(boolean botsTurn) {
-        GameInteract.botsTurn = botsTurn;
-    }
-
-    public static void setFirstTurn(boolean isFirstTurn) {
-        GameInteract.isFirstTurn = isFirstTurn;
-    }
-
-    public static boolean isBotsTurn() {
-        return botsTurn;
-    }
-
-    public static boolean isFirstTurnNow() {
+    public boolean isFirstTurnNow() {
         return isFirstTurn;
     }
 
@@ -62,38 +54,76 @@ public class GameInteract extends Thread {
 
     @Override
     public void run() {
-        while(gameThread!=null){
-            botsTurn();
+        while (gameThread != null) {
+            checkForEndGame();
+            checkBotsTurn();
         }
-
     }
 
     public void playNewGame() {
-        if(JOptionPane.showConfirmDialog(null, "Do you want to play again?", "Play again?", JOptionPane.YES_NO_OPTION) == 0) {
+        if (JOptionPane.showConfirmDialog(null, "Do you want to play again?", "Play again?", JOptionPane.YES_NO_OPTION) == 0) {
             map.drawNewMap();
-            endGame = false;
-            Arrays.fill(pManager.getModes(),false);
+            Arrays.fill(pManager.getModes(), false);
             isFirstTurn = true;
             pManager.getPlayers().clear();
-            botsTurn = false;
             pManager.setVisible(true);
-        }
-        else {
+            endGame = false;
+        } else {
             System.exit(0);
         }
     }
-    public void botsTurn(){
-        int row,col;
-        if(botsTurn&&!endGame){
-            do{
-                row=(int)(Math.random()*4);
-                col=(int)(Math.random()*4);
-            }while(map.getSymbols()[row][col]!='.');
-            if(isFirstTurn&&!pManager.getPlayers().getFirst().isHuman()){
-                map.getSymbols()[row][col]='X';
-            }else if(!isFirstTurn&&!pManager.getPlayers().getLast().isHuman())
-            {
-                map.getSymbols()[row][col]='0';
+
+    public void checkBotsTurn() {
+        if (!pManager.getPlayers().isEmpty() && !GameInteract.isEndGame()) {
+            int row, col;
+            do {
+                row = (int) (Math.random() * 3);
+                col = (int) (Math.random() * 3);
+            } while (map.getSymbols()[row][col] != '.');
+
+            if (pManager.getModes()[0]) {
+                if (pManager.getPlayers().getFirst().isHuman() && !isFirstTurn) {
+                    map.getSymbols()[row][col] = '0';
+                    isFirstTurn = true;
+                }
+                if (!pManager.getPlayers().getFirst().isHuman() && isFirstTurn) {
+                    map.getSymbols()[row][col] = 'X';
+                    isFirstTurn = false;
+                }
+            }
+            if (pManager.getModes()[2]) {
+                try {
+                    Thread.sleep(500);
+                } catch (InterruptedException e) {
+                    throw new RuntimeException(e);
+                }
+                map.getSymbols()[row][col] = isFirstTurn ? 'X' : '0';
+                isFirstTurn= !isFirstTurnNow();
+                map.drawConsoleMap();
+            }
+        }
+    }
+
+
+    public void checkForEndGame() {
+        if (!pManager.getPlayers().isEmpty() && !GameInteract.isEndGame()) {
+            checkForWin();
+            for (Player player : pManager.getPlayers()) {
+                if (player.isWinner()) {
+                    JOptionPane.showMessageDialog(null, player.getName() + " is winner!");
+                    playNewGame();
+                    return;
+                }
+            }
+            if (isDrawGame()) {
+                JOptionPane.showMessageDialog(null, "It's a draw");
+                playNewGame();
+            }
+        } else {
+            try {
+                Thread.sleep(10);
+            } catch (InterruptedException e) {
+                throw new RuntimeException(e);
             }
         }
     }
